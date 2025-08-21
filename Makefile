@@ -1,21 +1,29 @@
-CC = g++
-CFLAGS = -Wall -g
+# Nome dell'eseguibile da generare
+TARGET = my_program
 
-SRC_DIR = .
-OBJ_DIR = obj
-OUT_DIR = bin
+# Lista dei file sorgenti
+SRCS = atoiExample.cpp bufferAllocation.cpp bufferExample.cpp copy_bytes.cpp \
+       fileHandling.cpp fileReading.cpp getValueFromArray.cpp personStruct.cpp \
+       string_length.cpp systemCommands.cpp vehicleExample.cpp
 
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-EXECUTABLE = $(OUT_DIR)/program
+# Compilatore e flag di compilazione
+CXX = g++
+CXXFLAGS = -Wall -std=c++11
 
-$(OUT_DIR)/program: $(OBJECTS)
-	$(CC) $(OBJECTS) -o $(EXECUTABLE)
+# File oggetto (object files)
+OBJS = $(SRCS:.cpp=.o)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+# Regola per compilare l'eseguibile finale
+$(TARGET): $(OBJS)
+	$(CXX) $(OBJS) -o $(TARGET)
 
-.PHONY: clean
+# Regola per compilare i file oggetto
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Pulizia dei file generati
 clean:
-	rm -rf $(OBJ_DIR) $(OUT_DIR)
+	rm -f $(OBJS) $(TARGET)
+
+# Regola predefinita: costruisce tutto
+all: $(TARGET)
