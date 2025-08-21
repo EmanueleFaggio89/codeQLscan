@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read  # Permette l'accesso in lettura ai contenuti del repository
+
 jobs:
   analyze:
     name: Analyze code with CodeQL
