@@ -1,49 +1,21 @@
-# Variabili del compilatore
-CXX = g++
-CXXFLAGS = -Wall -std=c++11 -g  # -g per il debug, rimuovibile per la produzione
+CC = g++
+CFLAGS = -Wall -g
 
-# Lista dei file sorgente
-SRCS = \
-    atoiExample.cpp \
-    bufferAllocation.cpp \
-    bufferExample.cpp \
-    copy_bytes.cpp \
-    fileHandling.cpp \
-    fileReading.cpp \
-    getValueFromArray.cpp \
-    personStruct.cpp \
-    string_length.cpp \
-    systemCommands.cpp \
-    vehicleExample.cpp
+SRC_DIR = .
+OBJ_DIR = obj
+OUT_DIR = bin
 
-# Lista dei file oggetto (con estensione .o)
-OBJS = $(SRCS:.cpp=.o)
+SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+EXECUTABLE = $(OUT_DIR)/program
 
-# Eseguibili finali (uno per ogni file .cpp)
-EXECS = $(SRCS:.cpp=)
+$(OUT_DIR)/program: $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXECUTABLE)
 
-# Obiettivo di default: compilare tutti gli eseguibili
-all: $(EXECS)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Regola per compilare ogni .cpp in un file oggetto .o
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+.PHONY: clean
 
-# Regola per creare l'eseguibile a partire dai file oggetto
-$(EXECS): %: %.o
-	$(CXX) $(CXXFLAGS) $< -o $@
-
-# Pulizia dei file generati (oggetti e eseguibili)
 clean:
-	rm -f $(OBJS) $(EXECS)
-
-# Regola per una "ricompilazione completa"
-rebuild: clean all
-
-# Aiuto: mostra i target disponibili
-help:
-	@echo "Obiettivi disponibili:"
-	@echo "  all      - Compila tutti gli eseguibili"
-	@echo "  clean    - Rimuove i file oggetto e gli eseguibili"
-	@echo "  rebuild  - Pulisce e ricompila tutto"
-	@echo "  help     - Mostra questo messaggio"
+	rm -rf $(OBJ_DIR) $(OUT_DIR)
